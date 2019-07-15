@@ -21,7 +21,7 @@ private:
 
         for (int i = 0; i < (int)line.length(); i++)
         {
-            if ((48 <= int(line[i]) && int(line[i])  <= 57) || line[i] == '.')
+            if ((48 <= int(line[i]) && int(line[i])  <= 57) || line[i] == '.' || line[i] == '+' || line[i] == '-' || line[i] == 'e')
             {
                 tmp += line[i];
             }
@@ -118,6 +118,7 @@ class KMeans
 private:
     int K, iters, dimensions, total_points;
     vector<Cluster> clusters;
+    string output_dir;
 
     void clearClusters()
     {
@@ -135,9 +136,11 @@ private:
         for (int i = 0; i < dimensions; i++)
         {
             sum += pow(clusters[0].getCentroidByPos(i) - point.getVal(i), 2.0);
+            // sum += abs(clusters[0].getCentroidByPos(i) - point.getVal(i));
         }
 
         min_dist = sqrt(sum);
+        // min_dist = sum;
         NearestClusterId = clusters[0].getId();
 
         for (int i = 1; i < K; i++)
@@ -148,9 +151,11 @@ private:
             for (int j = 0; j < dimensions; j++)
             {
                 sum += pow(clusters[i].getCentroidByPos(j) - point.getVal(j), 2.0);
+                // sum += abs(clusters[i].getCentroidByPos(j) - point.getVal(j));
             }
 
             dist = sqrt(sum);
+            // dist = sum;
 
             if (dist < min_dist)
             {
@@ -163,10 +168,11 @@ private:
     }
 
 public:
-    KMeans(int K, int iterations)
+    KMeans(int K, int iterations, string output_dir)
     {
         this->K = K;
         this->iters = iterations;
+        this->output_dir = output_dir;
     }
 
     void run(vector<Point> &all_points)
@@ -259,7 +265,7 @@ public:
         }
 
         ofstream pointsFile;
-        pointsFile.open("points.txt", ios::out);
+        pointsFile.open(output_dir + "/" + to_string(K) + "-points.txt", ios::out);
 
         for (int i = 0; i < total_points; i++)
         {
@@ -270,7 +276,7 @@ public:
 
         // Write cluster centers to file
         ofstream outfile;
-        outfile.open("clusters.txt");
+        outfile.open(output_dir + "/" + to_string(K) + "-clusters.txt");
         if (outfile.is_open())
         {
             for (int i = 0; i < K; i++)
@@ -295,12 +301,14 @@ public:
 
 int main(int argc, char **argv)
 {
-    // Need 2 arguments (except filename) to run, else exit
-    if (argc != 3)
+    // Need 3 arguments (except filename) to run, else exit
+    if (argc != 4)
     {
-        cout << "Error: command-line argument count mismatch.";
+        cout << "Error: command-line argument count mismatch. \n ./kmeans <INPUT> <K> <OUT-DIR>" << endl;
         return 1;
     }
+
+    string output_dir = argv[3];
 
     // Fetching number of clusters
     int K = atoi(argv[2]);
@@ -325,7 +333,6 @@ int main(int argc, char **argv)
         Point point(pointId, line);
         all_points.push_back(point);
         pointId++;
-        cout << pointId << endl;
     }
     
     infile.close();
@@ -342,7 +349,7 @@ int main(int argc, char **argv)
     // Running K-Means Clustering
     int iters = 100;
 
-    KMeans kmeans(K, iters);
+    KMeans kmeans(K, iters, output_dir);
     kmeans.run(all_points);
 
     return 0;
