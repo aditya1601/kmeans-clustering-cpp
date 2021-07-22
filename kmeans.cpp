@@ -132,31 +132,38 @@ private:
     {
         double sum = 0.0, min_dist;
         int NearestClusterId;
-
-        for (int i = 0; i < dimensions; i++)
+        if(dimensions==1) {
+            min_dist = abs(clusters[0].getCentroidByPos(0) - point.getVal(0));
+        }	
+        else 
         {
-            sum += pow(clusters[0].getCentroidByPos(i) - point.getVal(i), 2.0);
-            // sum += abs(clusters[0].getCentroidByPos(i) - point.getVal(i));
+          for (int i = 0; i < dimensions; i++)
+          {
+             sum += pow(clusters[0].getCentroidByPos(i) - point.getVal(i), 2.0);
+             // sum += abs(clusters[0].getCentroidByPos(i) - point.getVal(i));
+          }
+          min_dist = sqrt(sum);
         }
-
-        min_dist = sqrt(sum);
-        // min_dist = sum;
         NearestClusterId = clusters[0].getId();
 
         for (int i = 1; i < K; i++)
         {
             double dist;
             sum = 0.0;
+            
+            if(dimensions==1) {
+                  dist = abs(clusters[i].getCentroidByPos(0) - point.getVal(0));
+            } 
+            else {
+              for (int j = 0; j < dimensions; j++)
+              {
+                  sum += pow(clusters[i].getCentroidByPos(j) - point.getVal(j), 2.0);
+                  // sum += abs(clusters[i].getCentroidByPos(j) - point.getVal(j));
+              }
 
-            for (int j = 0; j < dimensions; j++)
-            {
-                sum += pow(clusters[i].getCentroidByPos(j) - point.getVal(j), 2.0);
-                // sum += abs(clusters[i].getCentroidByPos(j) - point.getVal(j));
+              dist = sqrt(sum);
+              // dist = sum;
             }
-
-            dist = sqrt(sum);
-            // dist = sum;
-
             if (dist < min_dist)
             {
                 min_dist = dist;
