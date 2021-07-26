@@ -21,7 +21,7 @@ private:
 
         for (int i = 0; i < (int)line.length(); i++)
         {
-            if ((48 <= int(line[i]) && int(line[i])  <= 57) || line[i] == '.' || line[i] == '+' || line[i] == '-' || line[i] == 'e')
+            if ((48 <= int(line[i]) && int(line[i])  <= 57) || line[i] == '.' || line[i] == '+' || line[i] == '-')
             {
                 tmp += line[i];
             }
