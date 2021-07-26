@@ -219,7 +219,6 @@ public:
             bool done = true;
 
             // Add all points to their nearest cluster
-            // If you want to use parallel processing, please compile with appropriate configurations
             #pragma omp parallel for reduction(&&: done) num_threads(16)
             for (int i = 0; i < total_points; i++)
             {
