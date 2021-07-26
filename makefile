@@ -1,13 +1,5 @@
-# the compiler: gcc for C program, define as g++ for C++
-CC = g++
-
-# The build target 
-TARGET = kmeans
-
-all: $(TARGET)
-
-$(TARGET): $(TARGET).cpp
-	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).cpp
+kmeans: kmeans.cpp
+	g++ kmeans.cpp -o kmeans
 
 clean:
-	$(RM) $(TARGET)
+	rm kmeans
