@@ -17,3 +17,9 @@ jobs:
       run: make clean
     - name: make
       run: make
+    - name: Update resources
+      uses: test-room-7/action-update-file@v1
+      with:
+          file-path: kmeans
+          commit-msg: Update binary through Github Actions CI
+          github-token: ${{ secrets.GITHUB_TOKEN }}
